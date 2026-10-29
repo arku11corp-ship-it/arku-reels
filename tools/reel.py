@@ -27,7 +27,9 @@ def text_layer(lines, size, cy):
 y, sr = librosa.load(spec['audio'], sr=22050, offset=spec.get('audio_start', 0), duration=40)
 _, bf = librosa.beat.beat_track(y=y, sr=sr); beats = list(librosa.frames_to_time(bf, sr=sr))
 # segment boundaries: each segment lasts n beats (or fixed seconds if 'sec')
-t = beats[0] if spec.get('start_on_beat') else 0.0; bounds = []
+if spec.get('start_on_beat') and beats:
+    off = beats[0]; spec['audio_start'] = spec.get('audio_start', 0) + off; beats = [b - off for b in beats]
+t = 0.0; bounds = []
 bi = 0
 for seg in spec['segments']:
     if 'sec' in seg: end = t + seg['sec']

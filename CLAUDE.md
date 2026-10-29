@@ -6,9 +6,15 @@ d'Alexis, dossier `ARKU Reels/` (`dessins/<série>/` et `sons/`). Ne jamais écr
 ni d'ID Metricool dans ce dépôt (il est public).
 
 ## Règles fixées par Alexis (à respecter à chaque reel)
-- **CTA obligatoire sur chaque reel : « DM to commissions ».** Il est affiché en bas
-  (bande noire) pendant toute la vidéo, et il est aussi dans la caption. Les reels pour
-  les clients finissent en plus sur un écran noir « DM to commissions ».
+- **CTA obligatoire sur chaque reel : « DM to commissions ».** Chaque reel se termine par
+  l'écran de fin au format d'Alexis : fond noir, texte blanc centré « DM to commissions »
+  / « (limited slots) », environ 4 beats. Le CTA est aussi dans la caption.
+- **Safe zone (tous les textes doivent y être) :** zone visible à la fois dans les Reels
+  et dans le feed = y de 240 à 1470 px, x de 35 à 1045 px, et pas dans le coin
+  x > 945 / y > 1220 (boutons à droite). Le feed coupe l'image en 1080×1440
+  (y 240→1680) ; l'interface des Reels couvre le haut (220 px) et le bas (450 px).
+  Accroche en haut à y ≈ 330, étiquettes à y ≈ 1330, écran de fin centré à y = 960.
+  Vérifier avec `tools/safecheck.py` sur une image de chaque reel.
 - **Les étiquettes de cadrage doivent être exactes** (Portrait / Half body / Full body /
   Character sheet). Toujours choisir l'image d'après la colonne `cadrage` du catalogue :
   portrait = tête + épaules/poitrine ; half-body = jusqu'à la taille ;
@@ -18,7 +24,8 @@ ni d'ID Metricool dans ce dépôt (il est public).
   librosa dans `tools/reel.py`), en gardant les durées recommandées ci-dessous.
 
 ## Style (repris des reels à +300K vues du compte)
-- 1080×1920, 30 i/s, dessin centré sur fond noir (bandes noires haut/bas), noir et blanc.
+- 1080×1920, 30 i/s, dessin 3:4 centré sur fond noir (occupe exactement y 240→1680,
+  donc le feed n'affiche que le dessin), noir et blanc.
 - Une seule accroche courte en blanc (police Inter Display Medium, ombre portée), la
   commission n'est jamais l'accroche.
 - Durée : 3 à 12 s. Son tendance sped up / slowed. Captions en anglais.
@@ -40,6 +47,7 @@ ni d'ID Metricool dans ce dépôt (il est public).
   le même montage.
 
 ## Catalogue
+Les OC n'ont pas de nom : les décrire (ex. `fille-bandes`), ne pas inventer de nom.
 `catalogue.csv` : un dessin par ligne. Nom de fichier =
 `serie_sujet[_pN]_type_cadrage[_variante].png` — `pN` relie un croquis (`sketch`) à son
 final (`final`) ; `v2`, `v3` = variantes quasi identiques (n'en utiliser qu'une par reel).
