@@ -38,6 +38,7 @@ ni d'ID Metricool dans ce dépôt (il est public).
   écran final « DM to commissions ».
 
 ## Programmation
+- **Jamais plus de 5 trial reels par jour** (règle d'Alexis).
 - Metricool gratuit : 20 posts/mois → 5 trial reels par semaine, lundi→vendredi à 10h
   (Europe/Paris), type `TRIAL_REEL`.
 - Vidéo publiée dans `videos/` puis référencée via jsDelivr épinglé sur le commit :
