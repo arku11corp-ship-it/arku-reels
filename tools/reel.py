@@ -7,8 +7,7 @@ spec = json.load(open(sys.argv[1])); out = sys.argv[2]
 
 def fit(img):
     img = img.convert('RGB'); w, h = img.size
-    s = W / w; nh = int(h * s)
-    if nh > H: s = H / h
+    s = min(W / w, 1440 / h)
     return img.resize((int(w * s), int(h * s)), Image.LANCZOS)
 
 def text_layer(lines, size, cy):
@@ -33,6 +32,9 @@ t = 0.0; bounds = []
 bi = 0
 for seg in spec['segments']:
     if 'sec' in seg: end = t + seg['sec']
+    elif 'target' in seg:
+        cand = [b for b in beats if b > t + 0.35]
+        end = min(cand, key=lambda b: abs(b - (t + seg['target']))) if cand else t + seg['target']
     else:
         while bi < len(beats) and beats[bi] <= t + 0.05: bi += 1
         bi2 = min(bi + seg['beats'] - 1, len(beats) - 1); end = beats[bi2]; bi = bi2
@@ -52,6 +54,7 @@ for (t0, t1), seg in zip(bounds, spec['segments']):
         art = cache[seg['image']]
     else: art = None
     tl = text_layer(seg['text'], seg.get('size', 62), seg.get('text_y', 0)) if seg.get('text') else None
+    hl = text_layer([seg['hook']], 60, 330) if seg.get('hook') else None
     z0, z1 = seg.get('zoom', (1.0, 1.0))
     for k in range(n):
         fr = Image.new('RGB', (W, H), (0, 0, 0))
@@ -60,6 +63,7 @@ for (t0, t1), seg in zip(bounds, spec['segments']):
             a = art if z == 1 else art.resize((int(aw * z), int(ah * z)), Image.BILINEAR).crop((int(aw*(z-1)/2), int(ah*(z-1)/2), int(aw*(z-1)/2)+aw, int(ah*(z-1)/2)+ah))
             fr.paste(a, ((W - aw) // 2, (H - ah) // 2))
         if tl is not None: fr.paste(tl, (0, 0), tl)
+        if hl is not None: fr.paste(hl, (0, 0), hl)
         if cta is not None and not seg.get('no_cta'): fr.paste(cta, (0, 0), cta)
         p.stdin.write(fr.tobytes())
 p.stdin.close(); p.wait()
